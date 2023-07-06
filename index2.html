@@ -9,7 +9,7 @@
 
 <body>
   <div class="contents">
-    <div class="wrap">
+    <div class="wrap" id="wrap">
       <canvas id="hero-lightpass"></canvas>
     </div>
 
@@ -29,20 +29,24 @@
       background: #fff;
       padding: 0;
       margin: 0;
+      margin: 0 auto;
     }
 
     .contents {
+      margin: 50px auto 0;
       padding: 20px;
-      margin-top: 50px;
+      max-width: 360px;
     }
 
     .wrap {
       background-color: #000;
       position: relative;
+      max-width: 360px;
       height: 300px;
       padding: 30px 0;
       overflow: hidden;
       border-radius: 20px;
+      
     }
 
     canvas {
@@ -163,18 +167,30 @@
       }
     };
 
-    const img = new Image()
-    img.src = currentFrame(1);
-    canvas.width = 1158;
-    canvas.height = 770;
+    const wrap = document.getElementById("wrap");
+    const img = new Image();
+    let originalWidth = 1158; // 이미지의 원래 너비
+    let originalHeight = 770; // 이미지의 원래 높이
+
     img.onload = function () {
-      context.drawImage(img, 0, 0);
-    }
+      const wrapWidth = wrap.clientWidth;
+      const targetWidth = Math.min(wrapWidth, originalWidth); // 조정된 너비
+      const targetHeight = (targetWidth / originalWidth) * originalHeight; // 조정된 높이
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+
+      context.clearRect(0, 0, targetWidth, targetHeight);
+      context.drawImage(img, 0, 0, targetWidth, targetHeight);
+    };
+
+    img.src = currentFrame(1);
 
     const updateImage = index => {
       img.src = currentFrame(index);
-      context.drawImage(img, 0, 0);
-    }
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+
 
     let intervalId = null;
     let currentIndex = 1;
