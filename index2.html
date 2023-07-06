@@ -74,12 +74,25 @@
     #progress{opacity: 0;position: absolute;}
 
     input[type="range"] {
+      -webkit-appearance: none;
+      width: 80%;height:20px;
+      background: transparent;
+      border:1px solid #000;
+      border-radius: 15px;
     }
     input[type="range"]:focus {
+      outline: none;
     }
     input[type="range"]::-webkit-slider-runnable-track {
+      width: 80%;
+      height: 100%;
     }
     input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      background: #000;
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
     }
   </style>
 
