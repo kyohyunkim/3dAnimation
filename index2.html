@@ -20,6 +20,8 @@
     </div>
   </div>
   <style>
+    
+
     html {
       padding: 0;
       margin: 0;
@@ -144,6 +146,10 @@
       border-radius: 20px;
       box-shadow: none;
     }
+
+    @media all and (min-width:1025px) {
+
+    }
   </style>
 
 
@@ -234,6 +240,7 @@
     });
 
     canvas.addEventListener('touchmove', handleTouchMove);
+    
 
     function handleTouchMove(event) {
       const { touches } = event;
@@ -249,6 +256,30 @@
         updateImage(frameIndex + 1);
         currentIndex = frameIndex + 1;
         slider.value = currentIndex;
+      }
+    }
+
+    if (matchMedia("screen and (min-width: 1025px)").matches) {
+      canvas.addEventListener('mousemove', handleMove);
+      function handleMove(event) {
+        const { clientX, clientY } = event.touches ? event.touches[0] : event;
+        const { top, left } = canvas.getBoundingClientRect();
+        const x = clientX - left;
+        const y = clientY - top;
+        const dragFractionX = x / canvas.width;
+        const dragFractionY = y / canvas.height;
+        const frameIndexX = Math.min(
+          frameCount - 1,
+          Math.ceil(dragFractionX * frameCount)
+        );
+        const frameIndexY = Math.min(
+          frameCount - 1,
+          Math.ceil(dragFractionY * frameCount)
+        );
+
+        const frameIndex = Math.max(frameIndexX, frameIndexY);
+
+        requestAnimationFrame(() => updateImage(frameIndex + 1));
       }
     }
 
