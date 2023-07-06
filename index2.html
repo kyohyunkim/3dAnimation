@@ -15,8 +15,7 @@
 
     <progress id="progress" value="50" min="0" max="100"></progress>
     <div id="controller">
-      <button id="playButton"><span>▶</span></button>
-      <button id="pauseButton"><span></span></button>
+      <button id="playButton">play</button>
       <input type="range" id="slider" value="1" min="1" max="147">
     </div>
   </div>
@@ -33,7 +32,8 @@
     }
 
     .contents {
-      padding: 20px;margin-top:50px;
+      padding: 20px;
+      margin-top: 50px;
     }
 
     .wrap {
@@ -61,30 +61,77 @@
       align-items: center;
       justify-content: center;
     }
-    #controller div{margin-right: 5px;}
+
+    #controller div {
+      margin-right: 5px;
+    }
+
     #playButton,
-    #pauseButton{border:none;background: #000;color: #fff;border-radius: 7px;height: 25px;padding: 0px 10px;line-height: 25px;margin-right: 5px;display: none;}
-    #playButton span{transform: translateY(-1px);display: block;}
-    
-    #pauseButton span{position:relative;display: flex;align-items: center;justify-content: center;}
-    #pauseButton span::after{content:"";display:inline-block;background-color: #fff;width: 3px; height: 11px;margin:1px;}
-    #pauseButton span::before{content:"";display:inline-block;background-color: #fff;width: 3px; height: 11px;margin:1px;}
-    #progress{opacity: 0;position: absolute;}
+    #pauseButton {
+      border: none;
+      background: #000;
+      color: #fff;
+      border-radius: 7px;
+      height: 25px;
+      padding: 0px 10px;
+      line-height: 25px;
+      margin-right: 5px;
+      width: 60px;
+    }
+
+    #playButton span {
+      transform: translateY(-1px);
+      display: block;
+    }
+
+    #pauseButton span {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #pauseButton span::after {
+      content: "";
+      display: inline-block;
+      background-color: #fff;
+      width: 3px;
+      height: 11px;
+      margin: 1px;
+    }
+
+    #pauseButton span::before {
+      content: "";
+      display: inline-block;
+      background-color: #fff;
+      width: 3px;
+      height: 11px;
+      margin: 1px;
+    }
+
+    #progress {
+      opacity: 0;
+      position: absolute;
+    }
 
     input[type="range"] {
       -webkit-appearance: none;
-      width: 80%;height:20px;
+      width: 80%;
+      height: 20px;
       background: transparent;
-      border:1px solid #000;
+      border: 1px solid #000;
       border-radius: 15px;
     }
+
     input[type="range"]:focus {
       outline: none;
     }
+
     input[type="range"]::-webkit-slider-runnable-track {
       width: 80%;
       height: 100%;
     }
+
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       background: #000;
@@ -132,21 +179,37 @@
     let intervalId = null;
     let currentIndex = 1;
 
+    let isPlaying = false;
+
+    function toggleAnimation() {
+      if (isPlaying) {
+        pauseAnimation();
+      } else {
+        playAnimation();
+      }
+    }
+
     function playAnimation() {
       intervalId = setInterval(() => {
         updateImage(currentIndex);
         currentIndex = currentIndex % frameCount + 1;
         slider.value = currentIndex;
       }, 1000 / 24);
+
+      isPlaying = true;
+      playButton.textContent = 'Pause';
     }
 
     function pauseAnimation() {
       clearInterval(intervalId);
       intervalId = null;
+
+      isPlaying = false;
+      playButton.textContent = 'Play';
     }
 
-    playButton.addEventListener('click', playAnimation);
-    pauseButton.addEventListener('click', pauseAnimation);
+    playButton.addEventListener('click', toggleAnimation);
+
 
     slider.addEventListener('input', () => {
       const value = parseInt(slider.value);
